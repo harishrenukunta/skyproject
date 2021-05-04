@@ -2,10 +2,10 @@ const offerPage = require('./../pageobjects/offer.page');
 const homePage = require('./../pageobjects/home.page');
 const signInPage = require('./../pageobjects/signin.page');
 const expectChai = require('chai').expect;
+const resourceConstants = require('./../resources/constants');
 
 describe('SKY deals scenarios', () => {
 	it('should login with valid credentials', () => {
-		//await browser.url('/');
 		browser.reloadSession();
 		homePage.open('/');
 		browser.deleteCookies();
@@ -15,8 +15,8 @@ describe('SKY deals scenarios', () => {
 		//Click on Deals link
 		browser.switchToFrame(null);
 		homePage.gotoDeals();
-
-		expect(browser).toHaveUrl('https://www.sky.com/deals');
+		homePage.waitForDealsPage();
+		expect(browser).toHaveUrl(resourceConstants.dealsUrl);
 	});
 
 	it('Check error when login with invalid credentials', () => {
@@ -33,9 +33,7 @@ describe('SKY deals scenarios', () => {
 		signInPage.login('invalid', 'invalid');
 		const errMsg = signInPage.errorMsg();
 
-		expectChai(errMsg).equals(
-			'Sorry, we did not recognise either your username or password'
-		);
+		expectChai(errMsg).equals(resourceConstants.invalidLoginErrMsg);
 	});
 
 	it('Verify first 3 sky deals', () => {
